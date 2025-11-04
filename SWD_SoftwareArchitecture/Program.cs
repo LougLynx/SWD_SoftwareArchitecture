@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using SWD_SoftwareArchitecture.Models;
+
 namespace SWD_SoftwareArchitecture
 {
     public class Program
@@ -8,6 +11,10 @@ namespace SWD_SoftwareArchitecture
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Add DbContext
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
