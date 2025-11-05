@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SWD_SoftwareArchitecture.Models;
+using SWD_SoftwareArchitecture.Core;
 
 namespace SWD_SoftwareArchitecture
 {
@@ -15,6 +16,12 @@ namespace SWD_SoftwareArchitecture
             // Add DbContext
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Register Core Services (SPL Architecture)
+            builder.Services.AddCoreServices();
+
+            // Register Feature-Based Services (SPL Variability Management)
+            builder.Services.AddFeatureServices(builder.Configuration);
 
             var app = builder.Build();
 

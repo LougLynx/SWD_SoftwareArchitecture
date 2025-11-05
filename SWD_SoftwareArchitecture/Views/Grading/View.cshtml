@@ -1,0 +1,68 @@
+@model SWD_SoftwareArchitecture.DTOs.GradeSubmissionDto
+@{
+    ViewData["Title"] = "View Submission";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>Submission Details</h2>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5>Submission Information</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Submission ID:</dt>
+                        <dd class="col-sm-8">@Model.SubmissionId</dd>
+
+                        <dt class="col-sm-4">Student:</dt>
+                        <dd class="col-sm-8">@Model.StudentName</dd>
+
+                        <dt class="col-sm-4">Assignment:</dt>
+                        <dd class="col-sm-8">@Model.AssignmentTitle</dd>
+
+                        <dt class="col-sm-4">Submitted At:</dt>
+                        <dd class="col-sm-8">@Model.SubmittedAt.ToString("yyyy-MM-dd HH:mm")</dd>
+
+                        <dt class="col-sm-4">Max Score:</dt>
+                        <dd class="col-sm-8">@Model.MaxScore</dd>
+
+                        <dt class="col-sm-4">Grade:</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Grade > 0)
+                            {
+                                <strong>@Model.Grade / @Model.MaxScore</strong>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not graded yet</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4">Feedback:</dt>
+                        <dd class="col-sm-8">
+                            @if (!string.IsNullOrEmpty(Model.Feedback))
+                            {
+                                <div class="alert alert-info">@Model.Feedback</div>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No feedback provided</span>
+                            }
+                        </dd>
+                    </dl>
+
+                    <div class="mt-3">
+                        <a asp-action="Grade" asp-route-id="@Model.SubmissionId" class="btn btn-primary">
+                            @(Model.Grade > 0 ? "Re-grade" : "Grade")
+                        </a>
+                        <a asp-action="Index" asp-route-assignmentId="@Model.AssignmentId" class="btn btn-secondary">Back to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

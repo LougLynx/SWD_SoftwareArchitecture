@@ -1,0 +1,77 @@
+@model IEnumerable<SWD_SoftwareArchitecture.Models.Course>
+@{
+    ViewData["Title"] = "Select Course for Enrollment Management";
+}
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <h2>Manage Enrollments</h2>
+            <p class="text-muted">Select a course to manage enrollments</p>
+        </div>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Available Courses</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="row">
+                            @foreach (var course in Model)
+                            {
+                                <div class="col-md-4 mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@course.Title</h5>
+                                            <p class="card-text">
+                                                <small class="text-muted">@course.Category</small><br>
+                                                <span class="badge bg-@(course.Status == "Active" ? "success" : "secondary")">@course.Status</span>
+                                            </p>
+                                            @if (course.MaxCapacity.HasValue)
+                                            {
+                                                <p class="card-text">
+                                                    <small>Max Capacity: @course.MaxCapacity</small>
+                                                </p>
+                                            }
+                                            <a asp-action="Manage" asp-route-courseId="@course.CourseId" class="btn btn-primary btn-sm">
+                                                Manage Enrollments
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            No courses available. Please create a course first.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+    </script>
+}
+

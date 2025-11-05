@@ -23,6 +23,11 @@ namespace SWD_SoftwareArchitecture.Models
         [StringLength(100)]
         public string Category { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Maximum capacity for course enrollments (BR-02: Course maximum capacity must not be exceeded)
+        /// </summary>
+        public int? MaxCapacity { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
