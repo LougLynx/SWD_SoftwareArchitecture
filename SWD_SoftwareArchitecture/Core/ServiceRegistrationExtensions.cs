@@ -1,10 +1,11 @@
-using SWD_SoftwareArchitecture.Features;
+﻿using SWD_SoftwareArchitecture.Features;
 using SWD_SoftwareArchitecture.Repositories;
 using SWD_SoftwareArchitecture.Repositories.Interfaces;
 using SWD_SoftwareArchitecture.Services;
 using SWD_SoftwareArchitecture.Services.Interfaces;
 using SWD_SoftwareArchitecture.Variants.Strategies;
 using SWD_SoftwareArchitecture.Variants.Strategies.Interfaces;
+using System.Reflection;
 
 namespace SWD_SoftwareArchitecture.Core
 {
@@ -75,6 +76,36 @@ namespace SWD_SoftwareArchitecture.Core
             }
 
             return services;
+        }
+        public static void RegisterRepositories(this IServiceCollection services)
+        {
+            // Quét và đăng ký tất cả các repository
+            var repositoryInterfaces = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => t.IsInterface && t.Name.EndsWith("Repository") && t.Name != "IRepository");
+
+            foreach (var repoInterface in repositoryInterfaces)
+            {
+                var repoImplementation = Assembly.GetExecutingAssembly()
+                    .GetTypes()
+                    .FirstOrDefault(t => t.IsClass && !t.IsAbstract && repoInterface.IsAssignableFrom(t));
+
+                if (repoImplementation != null)
+                {
+                    services.AddScoped(repoInterface, repoImplementation);
+                }
+            }
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        }
+
+        public static void RegisterServices(this IServiceCollection services)
+        {
+            // Đăng ký các service
+            services.AddScoped<IEnrollmentService, EnrollmentService>();
+            services.AddScoped<IGradingService, GradingService>();
+
+            // Thêm đăng ký cho UserService
+            services.AddScoped<IUserService, UserService>();
         }
     }
 }

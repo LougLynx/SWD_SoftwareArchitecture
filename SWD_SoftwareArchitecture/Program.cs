@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using SWD_SoftwareArchitecture.Models;
 using SWD_SoftwareArchitecture.Core;
+using SWD_SoftwareArchitecture.Models;
+using SWD_SoftwareArchitecture.Variants.Strategies;
+using SWD_SoftwareArchitecture.Variants.Strategies.Interfaces;
 
 namespace SWD_SoftwareArchitecture
 {
@@ -19,6 +21,10 @@ namespace SWD_SoftwareArchitecture
 
             // Register Core Services (SPL Architecture)
             builder.Services.AddCoreServices();
+            builder.Services.RegisterRepositories();
+            builder.Services.RegisterServices();
+
+            builder.Services.AddScoped<EnrollmentStrategyFactory>();
 
             // Register Feature-Based Services (SPL Variability Management)
             builder.Services.AddFeatureServices(builder.Configuration);
