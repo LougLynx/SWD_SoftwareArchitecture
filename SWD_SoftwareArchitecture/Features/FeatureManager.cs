@@ -49,7 +49,12 @@ namespace SWD_SoftwareArchitecture.Features
                 _features[FeatureFlags.ForumDiscussion] = false;
 
             if (!_features.ContainsKey(FeatureFlags.CertificationSystem))
-                _features[FeatureFlags.CertificationSystem] = false;
+                _features[FeatureFlags.CertificationSystem] = true;
+            
+            if (!_features.ContainsKey(FeatureFlags.VirtualClassroom))
+            {
+                _features[FeatureFlags.VirtualClassroom] = true;
+            }
         }
 
         /// <summary>
@@ -90,6 +95,7 @@ namespace SWD_SoftwareArchitecture.Features
         public const string AdvancedReporting = "AdvancedReporting";
         public const string ForumDiscussion = "ForumDiscussion";
         public const string CertificationSystem = "CertificationSystem";
+        public const string VirtualClassroom = "VirtualClassroom";
         public const string MessagingSystem = "MessagingSystem";
         public const string QuizSystem = "QuizSystem";
     }

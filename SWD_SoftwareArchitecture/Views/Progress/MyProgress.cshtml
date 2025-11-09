@@ -1,0 +1,64 @@
+@model SWD_SoftwareArchitecture.DTOs.CourseProgressDto
+
+@{
+    ViewData["Title"] = "Tiến độ khóa học";
+}
+
+<h1>@Model.CourseTitle</h1>
+<a asp-controller="Home" asp-action="Index">Quay lại trang Chi tiết Khóa học</a>
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>1. Tiến độ tổng quan</h4>
+        <p>@Model.CompletionPercentage% Hoàn thành (@Model.CompletedLessons / @Model.TotalLessons bài học)</p>
+        <div class="progress" style="height: 25px;">
+            <div class="progress-bar" role="progressbar" 
+                 style="width: @Model.CompletionPercentage%;" 
+                 aria-valuenow="@Model.CompletionPercentage" aria-valuemin="0" aria-valuemax="100">
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <h4>2. Danh sách bài học</h4>
+        <ul class="list-group">
+            @foreach (var lesson in Model.Lessons.OrderBy(l => l.Title)) 
+            {
+                <li class="list-group-item">
+                    @if (lesson.IsCompleted)
+                    {
+                        <i class="fas fa-check-circle text-success"></i> }
+                    else
+                    {
+                        <i class="far fa-circle text-muted"></i>
+                    }
+                    <span class="ms-2">@lesson.Title</span>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="col-md-6">
+        <h4>3. Điểm số bài tập</h4>
+        @if (!Model.Assignments.Any())
+        {
+            <div class="alert alert-info">Chưa có điểm bài tập nào.</div>
+        }
+        else
+        {
+            <ul class="list-group">
+                @foreach (var assignment in Model.Assignments.OrderBy(a => a.Title))
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@assignment.Title</span>
+                        <strong>@assignment.Score</strong> </li>
+                }
+            </ul>
+        }
+    </div>
+</div>

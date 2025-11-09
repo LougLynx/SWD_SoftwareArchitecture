@@ -12,6 +12,7 @@ namespace SWD_SoftwareArchitecture.Repositories.Interfaces
         Task<IEnumerable<AssignmentSubmission>> GetSubmissionsByUserIdAsync(int userId);
         Task<AssignmentSubmission?> GetSubmissionWithDetailsAsync(int submissionId);
         Task<bool> HasSubmissionAsync(int assignmentId, int userId);
+        Task<IEnumerable<AssignmentSubmission>> GetSubmissionsForStudentByCourseAsync(int studentId, int courseId);
     }
 }
 

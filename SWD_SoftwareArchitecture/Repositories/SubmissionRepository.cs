@@ -48,6 +48,15 @@ namespace SWD_SoftwareArchitecture.Repositories
             return await _dbSet
                 .AnyAsync(s => s.AssignmentId == assignmentId && s.UserId == userId);
         }
+
+        public async Task<IEnumerable<AssignmentSubmission>> GetSubmissionsForStudentByCourseAsync(int studentId, int courseId)
+        {
+            // Truy vấn: Submission -> Assignment -> Course
+            return await _dbSet
+                .Include(s => s.Assignment)
+                .Where(s => s.UserId == studentId && s.Assignment.CourseId == courseId)
+                .ToListAsync();
+        }
     }
 }
 

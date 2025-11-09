@@ -32,6 +32,8 @@ namespace SWD_SoftwareArchitecture.Core
             services.AddScoped<ICourseRepository, CourseRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+            services.AddScoped<IProgressRepository, ProgressRepository>();
+            
 
             return services;
         }
@@ -46,6 +48,9 @@ namespace SWD_SoftwareArchitecture.Core
             // Core Services (always enabled)
             services.AddScoped<IEnrollmentService, EnrollmentService>();
             services.AddScoped<IGradingService, GradingService>();
+            services.AddScoped<IProgressService, ProgressService>();
+
+            services.AddScoped<ILessonService, LessonService>();
 
             // Enrollment Strategy Pattern (Variability Point)
             services.AddScoped<IEnrollmentStrategy, StandardEnrollmentStrategy>();
@@ -70,8 +75,19 @@ namespace SWD_SoftwareArchitecture.Core
 
             if (featureManager.IsEnabled(FeatureFlags.CertificationSystem))
             {
-                // Register certification services if enabled
-                // services.AddScoped<ICertificationService, CertificationService>();
+                services.AddScoped<ICertificateRepository, CertificateRepository>();
+                services.AddScoped<ICertificateService, CertificateService>();
+                services.AddScoped<ICertificateStrategy, StandardCertificateStrategy>();
+                services.AddScoped<ICertificateStrategy, NoOpCertificateStrategy>();
+                services.AddScoped<CertificateStrategyFactory>();
+            }
+
+            if (featureManager.IsEnabled(FeatureFlags.VirtualClassroom))
+            {
+                services.AddScoped<ILessonRepository, LessonRepository>();
+                services.AddScoped<ILessonService, LessonService>();
+                services.AddScoped<IClassroomStrategy, StandardClassroomStrategy>();
+                services.AddScoped<ClassroomStrategyFactory>();
             }
 
             return services;
