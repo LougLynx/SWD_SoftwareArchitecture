@@ -3,74 +3,61 @@ using SWD_SoftwareArchitecture.Repositories;
 using SWD_SoftwareArchitecture.Repositories.Interfaces;
 using SWD_SoftwareArchitecture.Services;
 using SWD_SoftwareArchitecture.Services.Interfaces;
-using SWD_SoftwareArchitecture.Variants.Strategies;
-using SWD_SoftwareArchitecture.Variants.Strategies.Interfaces;
 
 namespace SWD_SoftwareArchitecture.Core
 {
     /// <summary>
     /// Service registration extensions for SPL architecture
-    /// Provides feature-based service registration
     /// </summary>
     public static class ServiceRegistrationExtensions
     {
-        /// <summary>
-        /// Register core services (always available)
-        /// </summary>
+
         public static IServiceCollection AddCoreServices(this IServiceCollection services)
         {
-            // Register Feature Manager
+            // Đăng ký FeatureManager dưới dạng singleton (duy nhất trong toàn bộ ứng dụng)
             services.AddSingleton<FeatureManager>();
 
-            // Register Product Configuration
+            // Đăng ký ProductConfiguration
             services.AddScoped<Core.Abstractions.IProductConfiguration, ProductConfiguration>();
 
-            // Register Repositories (Core)
+            // Đăng ký các repository dùng cho chức năng cơ bản
+            // Tạo generic repository cho các entity (IRepository<>)
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
-            services.AddScoped<ISubmissionRepository, SubmissionRepository>();
-            services.AddScoped<ICourseRepository, CourseRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+            services.AddScoped<IEnrollmentRepository, EnrollmentRepository>(); // Đăng ký repository ghi danh
+            services.AddScoped<ISubmissionRepository, SubmissionRepository>(); // Đăng ký repository bài nộp
+            services.AddScoped<ICourseRepository, CourseRepository>();         // Đăng ký repository môn học
+            services.AddScoped<IUserRepository, UserRepository>();             // Đăng ký repository người dùng
+            services.AddScoped<IAssignmentRepository, AssignmentRepository>(); // Đăng ký repository bài tập
 
             return services;
         }
 
         /// <summary>
         /// Register feature-based services (conditional registration)
+        /// Sử dụng Singleton Pattern (FeatureManager) + SPL Architecture với conditional logic
         /// </summary>
         public static IServiceCollection AddFeatureServices(this IServiceCollection services, IConfiguration configuration)
         {
+            // Tạo FeatureManager instance để check features (sẽ được đăng ký Singleton ở AddCoreServices)
             var featureManager = new FeatureManager(configuration);
 
-            // Core Services (always enabled)
-            services.AddScoped<IEnrollmentService, EnrollmentService>();
-            services.AddScoped<IGradingService, GradingService>();
+            // Đăng ký các dịch vụ lõi (luôn bật)
+            services.AddScoped<IEnrollmentService, EnrollmentService>(); // Dịch vụ ghi danh
+            services.AddScoped<IGradingService, GradingService>();       // Dịch vụ chấm điểm
 
-            // Enrollment Strategy Pattern (Variability Point)
-            services.AddScoped<IEnrollmentStrategy, StandardEnrollmentStrategy>();
-            services.AddScoped<EnrollmentStrategyFactory>();
-
-            // Grading Strategy Pattern (Variability Point)
-            services.AddScoped<IGradingStrategy, StandardGradingStrategy>();
-            services.AddScoped<GradingStrategyFactory>();
-
-            // Conditional feature registration
+            // ✅ SPL Architecture: Conditional feature registration dựa trên FeatureManager (Singleton)
             if (featureManager.IsEnabled(FeatureFlags.AdvancedReporting))
             {
-                // Register advanced reporting services if enabled
                 // services.AddScoped<IAdvancedReportingService, AdvancedReportingService>();
             }
 
             if (featureManager.IsEnabled(FeatureFlags.ForumDiscussion))
             {
-                // Register forum services if enabled
                 // services.AddScoped<IForumService, ForumService>();
             }
 
             if (featureManager.IsEnabled(FeatureFlags.CertificationSystem))
             {
-                // Register certification services if enabled
                 // services.AddScoped<ICertificationService, CertificationService>();
             }
 
@@ -78,4 +65,3 @@ namespace SWD_SoftwareArchitecture.Core
         }
     }
 }
-

@@ -3,8 +3,8 @@ using Microsoft.Extensions.Configuration;
 namespace SWD_SoftwareArchitecture.Features
 {
     /// <summary>
-    /// Feature Manager for SPL Architecture
-    /// Manages feature flags and feature availability
+    /// Quản lý tính năng cho kiến trúc SPL
+    /// Quản lý các cờ tính năng và khả năng khả dụng của tính năng
     /// </summary>
     public class FeatureManager
     {
@@ -18,6 +18,9 @@ namespace SWD_SoftwareArchitecture.Features
             LoadFeatures();
         }
 
+        /// <summary>
+        /// Tải các tính năng từ cấu hình và thiết lập giá trị mặc định
+        /// </summary>
         private void LoadFeatures()
         {
             var featuresSection = _configuration.GetSection("Features");
@@ -29,13 +32,16 @@ namespace SWD_SoftwareArchitecture.Features
                 }
             }
 
-            // Load default features
+            // Tải các tính năng mặc định (nếu chưa cấu hình)
             LoadDefaultFeatures();
         }
 
+        /// <summary>
+        /// Thiết lập giá trị mặc định cho các tính năng nếu chưa có trong cấu hình
+        /// </summary>
         private void LoadDefaultFeatures()
         {
-            // Set default values if not configured
+            // Thiết lập giá trị mặc định nếu chưa cấu hình trong file cấu hình
             if (!_features.ContainsKey(FeatureFlags.EnrollmentManagement))
                 _features[FeatureFlags.EnrollmentManagement] = true;
 
@@ -53,7 +59,7 @@ namespace SWD_SoftwareArchitecture.Features
         }
 
         /// <summary>
-        /// Check if a feature is enabled
+        /// Kiểm tra một tính năng có đang bật hay không
         /// </summary>
         public bool IsEnabled(string featureName)
         {
@@ -61,7 +67,7 @@ namespace SWD_SoftwareArchitecture.Features
         }
 
         /// <summary>
-        /// Get all enabled features
+        /// Lấy danh sách các tính năng đang bật
         /// </summary>
         public IEnumerable<string> GetEnabledFeatures()
         {
@@ -69,24 +75,32 @@ namespace SWD_SoftwareArchitecture.Features
         }
 
         /// <summary>
-        /// Get all features with their status
+        /// Lấy tất cả các tính năng cùng trạng thái bật/tắt của chúng
         /// </summary>
         public Dictionary<string, bool> GetAllFeatures()
         {
             return new Dictionary<string, bool>(_features);
         }
+
+        /// <summary>
+        /// Lấy product variant từ configuration (SPL Architecture)
+        /// </summary>
+        public string GetProductVariant()
+        {
+            return _configuration["Product:Variant"] ?? "Standard";
+        }
     }
 
     /// <summary>
-    /// Feature flags constants for SPL variability points
+    /// Các hằng số cờ tính năng cho các điểm biến đổi trong SPL
     /// </summary>
     public static class FeatureFlags
     {
-        // Core Features (Common)
+        // Tính năng cốt lõi (chung)
         public const string EnrollmentManagement = "EnrollmentManagement";
         public const string GradingSystem = "GradingSystem";
         
-        // Optional Features (Variants)
+        // Tính năng tùy chọn (biến thể)
         public const string AdvancedReporting = "AdvancedReporting";
         public const string ForumDiscussion = "ForumDiscussion";
         public const string CertificationSystem = "CertificationSystem";
