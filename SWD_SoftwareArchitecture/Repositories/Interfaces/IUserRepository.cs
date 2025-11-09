@@ -8,6 +8,7 @@ namespace SWD_SoftwareArchitecture.Repositories.Interfaces
     public interface IUserRepository : IRepository<User>
     {
         Task<IEnumerable<User>> GetUsersByRoleAsync(string role);
+        Task<User?> GetByUsernameAsync(string username);
     }
 }
 

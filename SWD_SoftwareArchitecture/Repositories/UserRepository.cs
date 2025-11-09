@@ -21,6 +21,12 @@ namespace SWD_SoftwareArchitecture.Repositories
                 .Where(u => u.Role == role)
                 .ToListAsync();
         }
+
+        public async Task<User?> GetByUsernameAsync(string username)
+        {
+            return await _dbSet
+                .FirstOrDefaultAsync(u => u.FullName == username);
+        }
     }
 }
 

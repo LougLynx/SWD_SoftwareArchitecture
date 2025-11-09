@@ -1,4 +1,4 @@
-using SWD_SoftwareArchitecture.Features;
+﻿using SWD_SoftwareArchitecture.Features;
 using SWD_SoftwareArchitecture.Repositories;
 using SWD_SoftwareArchitecture.Repositories.Interfaces;
 using SWD_SoftwareArchitecture.Services;
@@ -44,6 +44,7 @@ namespace SWD_SoftwareArchitecture.Core
             // Đăng ký các dịch vụ lõi (luôn bật)
             services.AddScoped<IEnrollmentService, EnrollmentService>(); // Dịch vụ ghi danh
             services.AddScoped<IGradingService, GradingService>();       // Dịch vụ chấm điểm
+            services.AddScoped<IUserService, UserService>();              // Dịch vụ người dùng
 
             // ✅ SPL Architecture: Conditional feature registration dựa trên FeatureManager (Singleton)
             if (featureManager.IsEnabled(FeatureFlags.AdvancedReporting))

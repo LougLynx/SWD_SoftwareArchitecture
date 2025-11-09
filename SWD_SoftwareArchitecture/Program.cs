@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using SWD_SoftwareArchitecture.Models;
 using SWD_SoftwareArchitecture.Core;
+using SWD_SoftwareArchitecture.Models;
 
 namespace SWD_SoftwareArchitecture
 {
