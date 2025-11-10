@@ -4,7 +4,7 @@ namespace SWD_SoftwareArchitecture.Features
 {
     /// <summary>
     /// Quản lý tính năng cho kiến trúc SPL
-    /// Quản lý các cờ tính năng và khả năng khả dụng của tính năng
+    /// Quản lý các tính năng và khả năng khả dụng của tính năng
     /// </summary>
     public class FeatureManager
     {
@@ -18,9 +18,7 @@ namespace SWD_SoftwareArchitecture.Features
             LoadFeatures();
         }
 
-        /// <summary>
         /// Tải các tính năng từ cấu hình và thiết lập giá trị mặc định
-        /// </summary>
         private void LoadFeatures()
         {
             var featuresSection = _configuration.GetSection("Features");
@@ -36,9 +34,7 @@ namespace SWD_SoftwareArchitecture.Features
             LoadDefaultFeatures();
         }
 
-        /// <summary>
         /// Thiết lập giá trị mặc định cho các tính năng nếu chưa có trong cấu hình
-        /// </summary>
         private void LoadDefaultFeatures()
         {
             // Thiết lập giá trị mặc định nếu chưa cấu hình trong file cấu hình
@@ -58,42 +54,32 @@ namespace SWD_SoftwareArchitecture.Features
                 _features[FeatureFlags.CertificationSystem] = false;
         }
 
-        /// <summary>
         /// Kiểm tra một tính năng có đang bật hay không
-        /// </summary>
         public bool IsEnabled(string featureName)
         {
             return _features.ContainsKey(featureName) && _features[featureName];
         }
 
-        /// <summary>
         /// Lấy danh sách các tính năng đang bật
-        /// </summary>
         public IEnumerable<string> GetEnabledFeatures()
         {
             return _features.Where(f => f.Value).Select(f => f.Key);
         }
 
-        /// <summary>
         /// Lấy tất cả các tính năng cùng trạng thái bật/tắt của chúng
-        /// </summary>
         public Dictionary<string, bool> GetAllFeatures()
         {
             return new Dictionary<string, bool>(_features);
         }
 
-        /// <summary>
         /// Lấy product variant từ configuration (SPL Architecture)
-        /// </summary>
         public string GetProductVariant()
         {
             return _configuration["Product:Variant"] ?? "Standard";
         }
     }
 
-    /// <summary>
     /// Các hằng số cờ tính năng cho các điểm biến đổi trong SPL
-    /// </summary>
     public static class FeatureFlags
     {
         // Tính năng cốt lõi (chung)

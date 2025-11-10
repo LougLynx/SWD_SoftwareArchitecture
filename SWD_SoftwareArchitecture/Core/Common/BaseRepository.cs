@@ -6,10 +6,8 @@ using System.Linq.Expressions;
 
 namespace SWD_SoftwareArchitecture.Core.Common
 {
-    /// <summary>
-    /// Base repository class for SPL Core components
-    /// Provides common data access operations shared across all products
-    /// </summary>
+    // Base repository class for SPL Core components
+    //Provides common data access operations shared across all products
     public abstract class BaseRepository<T> : IRepository<T> where T : class
     {
         protected readonly ApplicationDbContext _context;

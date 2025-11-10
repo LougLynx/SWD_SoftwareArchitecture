@@ -42,14 +42,14 @@ namespace SWD_SoftwareArchitecture.Services
             {
                 SubmissionId = s.SubmissionId,
                 AssignmentId = s.AssignmentId,
-                AssignmentTitle = s.Assignment?.Title ?? "Unknown", // Lấy tên bài tập hoặc Unknown
+                AssignmentTitle = s.Assignment?.Title ?? "Unknown", 
                 UserId = s.UserId,
-                StudentName = s.User?.FullName ?? "Unknown",        // Lấy tên sinh viên hoặc Unknown
+                StudentName = s.User?.FullName ?? "Unknown",        
                 StudentEmail = s.User?.Email ?? "",
                 SubmittedAt = s.SubmittedAt,
                 Grade = s.Grade,
                 Feedback = s.Feedback,
-                MaxScore = s.Assignment?.MaxScore ?? 0             // Lấy điểm tối đa của bài tập
+                MaxScore = s.Assignment?.MaxScore ?? 0            
             });
         }
 

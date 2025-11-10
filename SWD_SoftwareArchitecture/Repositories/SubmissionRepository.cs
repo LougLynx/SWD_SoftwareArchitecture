@@ -7,7 +7,6 @@ namespace SWD_SoftwareArchitecture.Repositories
 {
     public class SubmissionRepository : Repository<AssignmentSubmission>, ISubmissionRepository
     {
-        // Hàm khởi tạo, inject context và logger
         public SubmissionRepository(ApplicationDbContext context, ILogger<SubmissionRepository> logger) 
             : base(context, logger)
         {
@@ -18,8 +17,8 @@ namespace SWD_SoftwareArchitecture.Repositories
         {
             // Trả về danh sách AssignmentSubmission có AssignmentId tương ứng
             return await _dbSet
-                .Include(s => s.User)           // Bao gồm thông tin người dùng nộp bài
-                .Include(s => s.Assignment)     // Bao gồm thông tin bài tập
+                .Include(s => s.User)           
+                .Include(s => s.Assignment)     
                 .Where(s => s.AssignmentId == assignmentId)
                 .ToListAsync();
         }
@@ -29,8 +28,8 @@ namespace SWD_SoftwareArchitecture.Repositories
         {
             // Trả về danh sách AssignmentSubmission có UserId tương ứng
             return await _dbSet
-                .Include(s => s.User)           // Bao gồm thông tin người dùng nộp bài
-                .Include(s => s.Assignment)     // Bao gồm thông tin bài tập
+                .Include(s => s.User)           
+                .Include(s => s.Assignment)     
                 .Where(s => s.UserId == userId)
                 .ToListAsync();
         }
@@ -40,9 +39,9 @@ namespace SWD_SoftwareArchitecture.Repositories
         {
             // Trả về bài nộp bao gồm thông tin người dùng, bài tập và khóa học
             return await _dbSet
-                .Include(s => s.User)                                       // Bao gồm thông tin người dùng nộp bài
-                .Include(s => s.Assignment)                                 // Bao gồm thông tin bài tập
-                    .ThenInclude(a => a!.Course)                           // Bao gồm thông tin khóa học
+                .Include(s => s.User)                                     
+                .Include(s => s.Assignment)                                 
+                    .ThenInclude(a => a!.Course)                          
                 .FirstOrDefaultAsync(s => s.SubmissionId == submissionId);
         }
 

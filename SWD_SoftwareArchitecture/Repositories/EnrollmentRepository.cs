@@ -3,12 +3,9 @@ using Microsoft.Extensions.Logging;
 using SWD_SoftwareArchitecture.Models;
 using SWD_SoftwareArchitecture.Repositories.Interfaces;
 
-namespace SWD_SoftwareArchitecture.Repositories
-{
-    // Triển khai lớp EnrollmentRepository
+namespace SWD_SoftwareArchitecture.Repositories {
     public class EnrollmentRepository : Repository<Enrollment>, IEnrollmentRepository
     {
-        // Hàm khởi tạo, inject context và logger
         public EnrollmentRepository(ApplicationDbContext context, ILogger<EnrollmentRepository> logger) 
             : base(context, logger)
         {
@@ -19,8 +16,8 @@ namespace SWD_SoftwareArchitecture.Repositories
         {
             // Trả về danh sách Enrollment có CourseId tương ứng
             return await _dbSet
-                .Include(e => e.User)   // Bao gồm thông tin người dùng
-                .Include(e => e.Course) // Bao gồm thông tin khóa học
+                .Include(e => e.User)   
+                .Include(e => e.Course)
                 .Where(e => e.CourseId == courseId)
                 .ToListAsync();
         }
@@ -30,8 +27,8 @@ namespace SWD_SoftwareArchitecture.Repositories
         {
             // Trả về danh sách Enrollment có UserId tương ứng
             return await _dbSet
-                .Include(e => e.User)   // Bao gồm thông tin người dùng
-                .Include(e => e.Course) // Bao gồm thông tin khóa học
+                .Include(e => e.User)   
+                .Include(e => e.Course) 
                 .Where(e => e.UserId == userId)
                 .ToListAsync();
         }
@@ -39,10 +36,9 @@ namespace SWD_SoftwareArchitecture.Repositories
         // Lấy thông tin ghi danh bằng UserId và CourseId
         public async Task<Enrollment?> GetEnrollmentByUserAndCourseAsync(int userId, int courseId)
         {
-            // Trả về bản ghi đầu tiên thỏa mãn UserId và CourseId (nếu có)
             return await _dbSet
-                .Include(e => e.User)   // Bao gồm thông tin người dùng
-                .Include(e => e.Course) // Bao gồm thông tin khóa học
+                .Include(e => e.User)   
+                .Include(e => e.Course)
                 .FirstOrDefaultAsync(e => e.UserId == userId && e.CourseId == courseId);
         }
 

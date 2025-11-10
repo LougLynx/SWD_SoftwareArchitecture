@@ -5,17 +5,12 @@ using SWD_SoftwareArchitecture.Repositories.Interfaces;
 
 namespace SWD_SoftwareArchitecture.Controllers
 {
-    /// <summary>
-    /// Chấm bài nộp
-    /// </summary>
+    // Chấm bài nộp
     public class GradingController : Controller
     {
-        // Dịch vụ chấm điểm (IGradingService)
         private readonly IGradingService _gradingService;
-        // Kho (repository) bài tập (assignment)
         private readonly IAssignmentRepository _assignmentRepository;
 
-        // Hàm khởi tạo Inject các dependency qua constructor
         public GradingController(
             IGradingService gradingService,
             IAssignmentRepository assignmentRepository)

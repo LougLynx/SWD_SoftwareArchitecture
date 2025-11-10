@@ -11,14 +11,10 @@ namespace SWD_SoftwareArchitecture.Controllers
     /// </summary>
     public class EnrollmentController : Controller
     {
-        // Service quản lý đăng ký học phần
         private readonly IEnrollmentService _enrollmentService;
-        // Repository lấy thông tin khóa học
         private readonly ICourseRepository _courseRepository;
-        // Repository lấy thông tin người dùng
         private readonly IUserRepository _userRepository;
 
-        // Hàm khởi tạo Inject các service/repository cần thiết
         public EnrollmentController(
             IEnrollmentService enrollmentService,
             ICourseRepository courseRepository,
@@ -29,10 +25,8 @@ namespace SWD_SoftwareArchitecture.Controllers
             _userRepository = userRepository;
         }
 
-        /// <summary>
         /// GET: Enrollment/Index
         /// Hiển thị danh sách các khóa học để chọn quản lý đăng ký
-        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -41,10 +35,8 @@ namespace SWD_SoftwareArchitecture.Controllers
             return View(courses);
         }
 
-        /// <summary>
         /// GET: Enrollment/Manage?courseId={courseId}
         /// Mở màn hình quản lý đăng ký và hiển thị danh sách đăng ký
-        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Manage(int? courseId)
         {
@@ -64,10 +56,8 @@ namespace SWD_SoftwareArchitecture.Controllers
             return View(enrollments);
         }
 
-        /// <summary>
         /// GET: Enrollment/Create?courseId={courseId}
         /// Hiển thị form thêm đăng ký mới
-        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Create(int? courseId)
         {
@@ -102,10 +92,8 @@ namespace SWD_SoftwareArchitecture.Controllers
             return View(enrollmentDto);
         }
 
-        /// <summary>
         /// POST: Enrollment/Create
         /// Xử lý tạo mới đăng ký (Add action)
-        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EnrollmentDto enrollmentDto)
@@ -142,10 +130,8 @@ namespace SWD_SoftwareArchitecture.Controllers
             return RedirectToAction(nameof(Manage), new { courseId = enrollmentDto.CourseId });
         }
 
-        /// <summary>
         /// GET: Enrollment/Edit/{id}
         /// Hiển thị form cập nhật đăng ký
-        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -173,10 +159,8 @@ namespace SWD_SoftwareArchitecture.Controllers
             return View(enrollmentDto);
         }
 
-        /// <summary>
         /// POST: Enrollment/Edit
         /// Xử lý cập nhật đăng ký
-        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EnrollmentDto enrollmentDto)
@@ -211,10 +195,8 @@ namespace SWD_SoftwareArchitecture.Controllers
             return RedirectToAction(nameof(Manage), new { courseId = enrollmentDto.CourseId });
         }
 
-        /// <summary>
         /// GET: Enrollment/Delete/{id}
         /// Hiển thị xác nhận xoá đăng ký
-        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -236,10 +218,8 @@ namespace SWD_SoftwareArchitecture.Controllers
             return View(enrollmentDto);
         }
 
-        /// <summary>
         /// POST: Enrollment/Delete/{id}
         /// Xử lý xoá đăng ký
-        /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Delete")]
@@ -268,10 +248,8 @@ namespace SWD_SoftwareArchitecture.Controllers
             return RedirectToAction(nameof(Manage), new { courseId = enrollmentDto.CourseId });
         }
 
-        /// <summary>
         /// GET: Enrollment/Details/{id}
         /// Hiển thị chi tiết đăng ký
-        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {

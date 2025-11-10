@@ -3,9 +3,7 @@ using SWD_SoftwareArchitecture.Core.Abstractions;
 
 namespace SWD_SoftwareArchitecture.Core
 {
-    /// <summary>
-    /// Product configuration implementation for SPL
-    /// </summary>
+    // Product configuration implementation for SPL
     public class ProductConfiguration : IProductConfiguration
     {
         private readonly FeatureManager _featureManager;

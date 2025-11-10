@@ -2,10 +2,8 @@ using Microsoft.Extensions.Logging;
 
 namespace SWD_SoftwareArchitecture.Core.Common
 {
-    /// <summary>
-    /// Base service class for SPL Core components
-    /// Provides common functionality shared across all products
-    /// </summary>
+    // Base service class for SPL Core components
+    // Provides common functionality shared across all products
     public abstract class BaseService
     {
         protected readonly ILogger Logger;
@@ -14,10 +12,7 @@ namespace SWD_SoftwareArchitecture.Core.Common
         {
             Logger = logger;
         }
-
-        /// <summary>
-        /// Common validation method
-        /// </summary>
+        // Common validation method
         protected bool ValidateRequired<T>(T? value, string fieldName)
         {
             if (value == null)
@@ -28,9 +23,7 @@ namespace SWD_SoftwareArchitecture.Core.Common
             return true;
         }
 
-        /// <summary>
-        /// Common error handling wrapper
-        /// </summary>
+        // Common error handling wrapper
         protected async Task<T> ExecuteWithErrorHandlingAsync<T>(
             Func<Task<T>> operation,
             string operationName)
