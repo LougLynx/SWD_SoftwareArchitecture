@@ -5,7 +5,6 @@ using SWD_SoftwareArchitecture.Repositories.Interfaces;
 
 namespace SWD_SoftwareArchitecture.Controllers
 {
-    // Chấm bài nộp
     public class GradingController : Controller
     {
         private readonly IGradingService _gradingService;
@@ -20,13 +19,15 @@ namespace SWD_SoftwareArchitecture.Controllers
         }
 
         /// <summary>
+        /// UC09 - Step 1: Select submission to grade (load assignment/submissions)
         /// GET: Grading/Index?assignmentId={assignmentId}
         /// Step 1-2: Opens Grade Submissions screen and displays list of submissions
         /// If no assignmentId, shows list of assignments to select
         /// Hiển thị màn hình chọn bài tập hoặc danh sách bài nộp để chấm điểm
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> Index(int? assignmentId)
+        [ActionName("Index")]
+        public async Task<IActionResult> SelectSubmissionToGrade(int? assignmentId)
         {
             if (!assignmentId.HasValue)
             {
@@ -51,21 +52,23 @@ namespace SWD_SoftwareArchitecture.Controllers
             ViewBag.AssignmentTitle = assignment.Title;
             ViewBag.MaxScore = assignment.MaxScore;
 
-            return View(submissions);
+            return View("Index", submissions);
         }
 
         /// <summary>
+        /// UC09 - Step 1.1: Request submission details
         /// GET: Grading/Grade/{id}
         /// Step 3-4: Displays submission details for grading
         /// Hiển thị chi tiết bài nộp để chấm điểm
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> Grade(int? id)
+        [ActionName("Grade")]
+        public async Task<IActionResult> RequestSubmissionDetails(int? id)
         {
             if (!id.HasValue)
             {
                 // Nếu không có id bài nộp, báo lỗi về Home
-                TempData["ErrorMessage"] = "Submission ID is required."; // Cần có ID bài nộp
+                TempData["ErrorMessage"] = "Submission ID is required."; 
                 return RedirectToAction("Index", "Home");
             }
 
@@ -75,22 +78,24 @@ namespace SWD_SoftwareArchitecture.Controllers
             {
                 // A3.1: Submission Not Available
                 // Nếu không có bài nộp (đã bị xóa, ...), báo lỗi
-                TempData["ErrorMessage"] = "Submission not found or is no longer accessible."; // Bài nộp không tồn tại hoặc không truy cập được
+                TempData["ErrorMessage"] = "Submission not found or is no longer accessible."; 
                 return RedirectToAction("Index", "Home");
             }
 
             // Hiển thị view nhập điểm và nhận xét
-            return View(gradeDto);
+            return View("Grade", gradeDto);
         }
 
         /// <summary>
+        /// UC09 - Step 2.1: Submit grade
         /// POST: Grading/Grade
         /// Step 5-8: Handles grade submission
         /// Xử lý việc gửi điểm và nhận xét bài nộp (post form chấm điểm)
         /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Grade(GradeSubmissionDto gradeDto)
+        [ActionName("Grade")]
+        public async Task<IActionResult> SubmitGrade(GradeSubmissionDto gradeDto)
         {
             if (!ModelState.IsValid)
             {
@@ -105,7 +110,7 @@ namespace SWD_SoftwareArchitecture.Controllers
                     gradeDto.SubmittedAt = submission.SubmittedAt;
                     gradeDto.MaxScore = submission.MaxScore;
                 }
-                return View(gradeDto);
+                return View("Grade", gradeDto);
             }
 
             // Gọi dịch vụ xử lý chấm điểm
@@ -117,7 +122,7 @@ namespace SWD_SoftwareArchitecture.Controllers
                 // A7.1: Invalid Grade Input
                 // E8.1: Database update failure
                 // Nếu chấm điểm thất bại, báo lỗi
-                TempData["ErrorMessage"] = result.ErrorMessage ?? "Failed to save grade."; // Không lưu được điểm
+                TempData["ErrorMessage"] = result.ErrorMessage ?? "Failed to save grade."; 
 
                 // Nạp lại thông tin cần thiết cho view
                 var submission = await _gradingService.GetSubmissionForGradingAsync(gradeDto.SubmissionId);
@@ -128,33 +133,35 @@ namespace SWD_SoftwareArchitecture.Controllers
                     gradeDto.SubmittedAt = submission.SubmittedAt;
                     gradeDto.MaxScore = submission.MaxScore;
                 }
-                return View(gradeDto);
+                return View("Grade", gradeDto);
             }
 
             // Step 8: Success confirmation
             // Nếu thành công, thông báo thành công cho người dùng
-            TempData["SuccessMessage"] = "Grade and feedback saved successfully."; // Chấm điểm và nhận xét thành công
+            TempData["SuccessMessage"] = "Grade and feedback saved successfully."; 
 
             // Lấy assignmentId để chuyển về trang danh sách bài nộp của assignment đó
             var submissionDetails = await _gradingService.GetSubmissionForGradingAsync(gradeDto.SubmissionId);
             var assignmentId = submissionDetails?.AssignmentId ?? 0;
 
             // Quay lại trang danh sách bài nộp sau khi chấm xong
-            return RedirectToAction(nameof(Index), new { assignmentId = assignmentId });
+            return RedirectToAction("Index", new { assignmentId = assignmentId });
         }
 
         /// <summary>
+        /// UC09 - Supporting: Display submission details (read-only)
         /// GET: Grading/View/{id}
         /// View submission details without editing
         /// Xem chi tiết bài nộp (không cho chấm, chỉ xem)
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> View(int? id)
+        [ActionName("View")]
+        public async Task<IActionResult> DisplaySubmissionDetails(int? id)
         {
             if (!id.HasValue)
             {
                 // Nếu không truyền id => báo lỗi
-                TempData["ErrorMessage"] = "Submission ID is required."; // Cần có ID bài nộp
+                TempData["ErrorMessage"] = "Submission ID is required."; 
                 return RedirectToAction("Index", "Home");
             }
 
@@ -162,12 +169,12 @@ namespace SWD_SoftwareArchitecture.Controllers
             var gradeDto = await _gradingService.GetSubmissionForGradingAsync(id.Value);
             if (gradeDto == null)
             {
-                TempData["ErrorMessage"] = "Submission not found."; // Không tìm thấy bài nộp
+                TempData["ErrorMessage"] = "Submission not found."; 
                 return RedirectToAction("Index", "Home");
             }
 
             // Hiển thị view xem chi tiết bài nộp
-            return View(gradeDto);
+            return View("View", gradeDto);
         }
     }
 }

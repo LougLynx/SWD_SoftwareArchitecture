@@ -23,30 +23,25 @@ namespace SWD_SoftwareArchitecture.Core
             // Đăng ký các repository dùng cho chức năng cơ bản
             // Tạo generic repository cho các entity (IRepository<>)
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped<IEnrollmentRepository, EnrollmentRepository>(); // Đăng ký repository ghi danh
-            services.AddScoped<ISubmissionRepository, SubmissionRepository>(); // Đăng ký repository bài nộp
-            services.AddScoped<ICourseRepository, CourseRepository>();         // Đăng ký repository môn học
-            services.AddScoped<IUserRepository, UserRepository>();             // Đăng ký repository người dùng
-            services.AddScoped<IAssignmentRepository, AssignmentRepository>(); // Đăng ký repository bài tập
+            services.AddScoped<IEnrollmentRepository, EnrollmentRepository>(); 
+            services.AddScoped<ISubmissionRepository, SubmissionRepository>(); 
+            services.AddScoped<ICourseRepository, CourseRepository>();         
+            services.AddScoped<IUserRepository, UserRepository>();            
+            services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 
             return services;
         }
 
-        /// <summary>
-        /// Register feature-based services (conditional registration)
         /// Sử dụng Singleton Pattern (FeatureManager) + SPL Architecture với conditional logic
-        /// </summary>
         public static IServiceCollection AddFeatureServices(this IServiceCollection services, IConfiguration configuration)
         {
             // Tạo FeatureManager instance để check features (sẽ được đăng ký Singleton ở AddCoreServices)
             var featureManager = new FeatureManager(configuration);
 
-            // Đăng ký các dịch vụ lõi (luôn bật)
-            services.AddScoped<IEnrollmentService, EnrollmentService>(); // Dịch vụ ghi danh
-            services.AddScoped<IGradingService, GradingService>();       // Dịch vụ chấm điểm
-            services.AddScoped<IUserService, UserService>();              // Dịch vụ người dùng
+            services.AddScoped<IEnrollmentService, EnrollmentService>(); 
+            services.AddScoped<IGradingService, GradingService>();       
+            services.AddScoped<IUserService, UserService>();             
 
-            // ✅ SPL Architecture: Conditional feature registration dựa trên FeatureManager (Singleton)
             if (featureManager.IsEnabled(FeatureFlags.AdvancedReporting))
             {
                 // services.AddScoped<IAdvancedReportingService, AdvancedReportingService>();

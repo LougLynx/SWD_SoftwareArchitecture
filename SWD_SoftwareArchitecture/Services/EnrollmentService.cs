@@ -26,14 +26,14 @@ namespace SWD_SoftwareArchitecture.Services
             IEnrollmentRepository enrollmentRepository,
             ICourseRepository courseRepository,
             IUserRepository userRepository,
-            FeatureManager featureManager) // ✅ Inject Singleton
+            FeatureManager featureManager)
             : base(logger)
         {
             // Khởi tạo các repository cần thiết
             _enrollmentRepository = enrollmentRepository;
             _courseRepository = courseRepository;
             _userRepository = userRepository;
-            _featureManager = featureManager; // ✅ SPL Architecture
+            _featureManager = featureManager;
         }
 
         // Lấy danh sách enrollment theo mã khóa học
@@ -45,7 +45,7 @@ namespace SWD_SoftwareArchitecture.Services
             {
                 EnrollmentId = e.EnrollmentId,
                 UserId = e.UserId,
-                StudentName = e.User?.FullName ?? "Unknown", // Lấy tên SV, nếu không có để "Unknown"
+                StudentName = e.User?.FullName ?? "Unknown", 
                 StudentEmail = e.User?.Email ?? "",
                 CourseId = e.CourseId,
                 CourseTitle = e.Course?.Title ?? "Unknown",

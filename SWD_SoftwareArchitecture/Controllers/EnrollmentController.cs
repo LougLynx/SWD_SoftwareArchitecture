@@ -35,10 +35,12 @@ namespace SWD_SoftwareArchitecture.Controllers
             return View(courses);
         }
 
+        /// UC08 - Step 1.1: Request enrollment list
         /// GET: Enrollment/Manage?courseId={courseId}
         /// Mở màn hình quản lý đăng ký và hiển thị danh sách đăng ký
         [HttpGet]
-        public async Task<IActionResult> Manage(int? courseId)
+        [ActionName("Manage")]
+        public async Task<IActionResult> RequestEnrollmentList(int? courseId)
         {
             // Kiểm tra nếu chưa truyền courseId thì báo lỗi
             if (!courseId.HasValue)
@@ -53,13 +55,15 @@ namespace SWD_SoftwareArchitecture.Controllers
             // Lấy tên khoá học để hiển thị trên giao diện, nếu không có thì hiển thị "Unknown Course"
             ViewBag.CourseTitle = (await _courseRepository.GetByIdAsync(courseId.Value))?.Title ?? "Unknown Course";
 
-            return View(enrollments);
+            return View("Manage", enrollments);
         }
 
+        /// UC08 - Step 1.1.1.1: Display data for enrollment creation
         /// GET: Enrollment/Create?courseId={courseId}
         /// Hiển thị form thêm đăng ký mới
         [HttpGet]
-        public async Task<IActionResult> Create(int? courseId)
+        [ActionName("Create")]
+        public async Task<IActionResult> DisplayEnrollmentCreationForm(int? courseId)
         {
             // Kiểm tra đầu vào
             if (!courseId.HasValue)
@@ -89,14 +93,16 @@ namespace SWD_SoftwareArchitecture.Controllers
                 Status = "Active"
             };
 
-            return View(enrollmentDto);
+            return View("Create", enrollmentDto);
         }
 
+        /// UC08 - Step 2.1: Submit enrollment change (Add)
         /// POST: Enrollment/Create
         /// Xử lý tạo mới đăng ký (Add action)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(EnrollmentDto enrollmentDto)
+        [ActionName("Create")]
+        public async Task<IActionResult> SubmitEnrollmentChangeAdd(EnrollmentDto enrollmentDto)
         {
             // Kiểm tra dữ liệu hợp lệ
             if (!ModelState.IsValid)
@@ -106,7 +112,7 @@ namespace SWD_SoftwareArchitecture.Controllers
                 ViewBag.Students = students;
                 var course = await _courseRepository.GetByIdAsync(enrollmentDto.CourseId);
                 ViewBag.CourseTitle = course?.Title ?? "Unknown";
-                return View(enrollmentDto);
+                return View("Create", enrollmentDto);
             }
 
             // Thực hiện tạo mới đăng ký
@@ -122,18 +128,20 @@ namespace SWD_SoftwareArchitecture.Controllers
                 ViewBag.Students = students;
                 var course = await _courseRepository.GetByIdAsync(enrollmentDto.CourseId);
                 ViewBag.CourseTitle = course?.Title ?? "Unknown";
-                return View(enrollmentDto);
+                return View("Create", enrollmentDto);
             }
 
             // Tạo thành công, chuyển về trang quản lý đăng ký của khoá học đó
             TempData["SuccessMessage"] = "Enrollment created successfully.";
-            return RedirectToAction(nameof(Manage), new { courseId = enrollmentDto.CourseId });
+            return RedirectToAction("Manage", new { courseId = enrollmentDto.CourseId });
         }
 
+        /// UC08 - Step 2.1: Prepare enrollment change (Update)
         /// GET: Enrollment/Edit/{id}
         /// Hiển thị form cập nhật đăng ký
         [HttpGet]
-        public async Task<IActionResult> Edit(int? id)
+        [ActionName("Edit")]
+        public async Task<IActionResult> DisplayEnrollmentUpdateForm(int? id)
         {
             // Kiểm tra đầu vào
             if (!id.HasValue)
@@ -156,14 +164,16 @@ namespace SWD_SoftwareArchitecture.Controllers
             var course = await _courseRepository.GetByIdAsync(enrollmentDto.CourseId);
             ViewBag.CourseTitle = course?.Title ?? "Unknown";
 
-            return View(enrollmentDto);
+            return View("Edit", enrollmentDto);
         }
 
+        /// UC08 - Step 2.1: Submit enrollment change (Update)
         /// POST: Enrollment/Edit
         /// Xử lý cập nhật đăng ký
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(EnrollmentDto enrollmentDto)
+        [ActionName("Edit")]
+        public async Task<IActionResult> SubmitEnrollmentChangeUpdate(EnrollmentDto enrollmentDto)
         {
             // Kiểm tra dữ liệu hợp lệ
             if (!ModelState.IsValid)
@@ -173,7 +183,7 @@ namespace SWD_SoftwareArchitecture.Controllers
                 ViewBag.Students = students;
                 var course = await _courseRepository.GetByIdAsync(enrollmentDto.CourseId);
                 ViewBag.CourseTitle = course?.Title ?? "Unknown";
-                return View(enrollmentDto);
+                return View("Edit", enrollmentDto);
             }
 
             // Cập nhật thông tin đăng ký
@@ -187,18 +197,20 @@ namespace SWD_SoftwareArchitecture.Controllers
                 ViewBag.Students = students;
                 var course = await _courseRepository.GetByIdAsync(enrollmentDto.CourseId);
                 ViewBag.CourseTitle = course?.Title ?? "Unknown";
-                return View(enrollmentDto);
+                return View("Edit", enrollmentDto);
             }
 
             // Cập nhật thành công, điều hướng về trang quản lý đăng ký
             TempData["SuccessMessage"] = "Enrollment updated successfully.";
-            return RedirectToAction(nameof(Manage), new { courseId = enrollmentDto.CourseId });
+            return RedirectToAction("Manage", new { courseId = enrollmentDto.CourseId });
         }
 
+        /// UC08 - Step 2.1: Prepare enrollment change (Remove)
         /// GET: Enrollment/Delete/{id}
         /// Hiển thị xác nhận xoá đăng ký
         [HttpGet]
-        public async Task<IActionResult> Delete(int? id)
+        [ActionName("Delete")]
+        public async Task<IActionResult> DisplayEnrollmentRemovalConfirmation(int? id)
         {
             // Kiểm tra đầu vào
             if (!id.HasValue)
@@ -215,15 +227,16 @@ namespace SWD_SoftwareArchitecture.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return View(enrollmentDto);
+            return View("Delete", enrollmentDto);
         }
 
+        /// UC08 - Step 2.1: Submit enrollment change (Remove)
         /// POST: Enrollment/Delete/{id}
         /// Xử lý xoá đăng ký
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> SubmitEnrollmentChangeRemove(int id)
         {
             // Lấy thông tin đăng ký cần xoá
             var enrollmentDto = await _enrollmentService.GetEnrollmentByIdAsync(id);
@@ -240,18 +253,20 @@ namespace SWD_SoftwareArchitecture.Controllers
             {
                 // E7.1: Lỗi cập nhật cơ sở dữ liệu
                 TempData["ErrorMessage"] = result.ErrorMessage ?? "Failed to delete enrollment.";
-                return View(enrollmentDto);
+                return View("Delete", enrollmentDto);
             }
 
             // Xoá thành công, quay về trang quản lý đăng ký khoá học
             TempData["SuccessMessage"] = "Enrollment deleted successfully.";
-            return RedirectToAction(nameof(Manage), new { courseId = enrollmentDto.CourseId });
+            return RedirectToAction("Manage", new { courseId = enrollmentDto.CourseId });
         }
 
+        /// UC08 - Supporting: Display enrollment details
         /// GET: Enrollment/Details/{id}
         /// Hiển thị chi tiết đăng ký
         [HttpGet]
-        public async Task<IActionResult> Details(int? id)
+        [ActionName("Details")]
+        public async Task<IActionResult> DisplayEnrollmentDetails(int? id)
         {
             // Kiểm tra đầu vào
             if (!id.HasValue)
@@ -268,7 +283,7 @@ namespace SWD_SoftwareArchitecture.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return View(enrollmentDto);
+            return View("Details", enrollmentDto);
         }
     }
 }

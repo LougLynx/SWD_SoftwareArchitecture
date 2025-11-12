@@ -29,7 +29,7 @@
                         <div class="form-group mb-3">
                             <label asp-for="UserId" class="form-label"></label>
                             <select asp-for="UserId" class="form-select" required>
-                                <option value="">-- Select Student --</option>
+                                <option value="">Select Student</option>
                                 @foreach (var student in students)
                                 {
                                     <option value="@student.UserId">@student.FullName (@student.Email)</option>
